@@ -218,16 +218,16 @@ sub uri {
 }
 
 sub best {
-	my ($obj, $ref, $ref_array, $fallback) = @_;
+	my $obj = shift;
 
-	my $image = $fallback;
-	if (exists $obj->{$ref}) {
-		$image = Plugins::GoogleMusic::Image->uri($obj->{$ref});
+	my $image = '/html/images/artists.png';
+	if (exists $obj->{artistArtRef}) {
+		$image = Plugins::GoogleMusic::Image->uri($obj->{artistArtRef});
 	}
 	# eg. artistArtRefs is an array of images, one of which might have a 1:1 aspect ratio,
 	# so try that and fall back to eg. artistArtRef which is an aspect ratio crapshoot
-	if (exists $obj->{$ref_array}) {
-		for my $artRef (@{$obj->{$ref_array}}) {
+	if (exists $obj->{artistArtRefs}) {
+		for my $artRef (@{$obj->{artistArtRefs}}) {
 			if ($artRef->{aspectRatio} == 1) { 	
 				$image = Plugins::GoogleMusic::Image->uri($artRef->{url});
 			}

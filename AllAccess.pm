@@ -112,7 +112,7 @@ sub to_slim_artist {
 	my $uri = 'googlemusic:artist:' . $id;
 	my $name = $song->{artist};
 
-    my $image = Plugins::GoogleMusic::Image::best($song, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
+	my $image = Plugins::GoogleMusic::Image::best($song);
 
 	my $artist = {
 		uri => $uri,
@@ -146,12 +146,11 @@ sub to_slim_album_artist {
 	my $various = (index(lc($song->{artist}), lc($song->{albumArtist} || '')) == -1) ? 1 : 0;
 	my $image;
 	if ($various) {
-    	$image = '/html/images/artists.png';
+		$image = '/html/images/artists.png';
+	} else {
+		$image = Plugins::GoogleMusic::Image::best($song);
 	}
-	else {
-    	$image = Plugins::GoogleMusic::Image::best($song, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
-	}
-    
+
 
 	my $artist = {
 		uri => $uri,
@@ -342,7 +341,7 @@ sub get_artist_image {
 		$log->error("Not able to get the artist image for artist ID $id: $@");
 	}
 
-    my $image = Plugins::GoogleMusic::Image::best($googleArtist, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
+	my $image = Plugins::GoogleMusic::Image::best($googleArtist);
 
 	# Add to the cache
 	$cache->set($imageuri, $image, $CACHE_TIME);
@@ -443,7 +442,7 @@ sub artist_to_slim_artist {
 
 	my $uri = 'googlemusic:artist:' . $googleArtist->{artistId};
 
-    my $image = Plugins::GoogleMusic::Image::best($googleArtist, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
+	my $image = Plugins::GoogleMusic::Image::best($googleArtist);
 
 	my $artist = {
 		uri => $uri,
@@ -506,7 +505,7 @@ sub getGenres {
 	for my $genre (@{$googleGenres}) {
 		push @{$genres}, genreToSlimGenre($genre);
 	}
-	
+
 	$cache->set($uri, $genres, $CACHE_TIME);
 
 	return $genres;
